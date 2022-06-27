@@ -4,6 +4,8 @@ import { useState } from 'react';
 import MovieComponent from './components/MovieComponent';
 import Axios from 'axios';
 import MovieInfoComponent from './components/MovieInfoComponent';
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
 const API_KEY = "ec479189";
 const Container = styled.div`
@@ -27,7 +29,7 @@ const Header = styled.div`
 `;
 
 const AppName= styled.div`
-  dislay:flex;
+  display:flex;
   flex-direction:row;
   align-items:center;
   justify-content:center;
@@ -78,6 +80,15 @@ function App() {
   const [movieList,updateMovielist] = useState([]);
   const [selectedMovie, onMovieSelect] = useState();
 
+  const particlesInit = async (main) => {
+    console.log(main);
+    await loadFull(main);
+  };
+  
+   const particlesLoaded = (container) => {
+    console.log(container);
+  };
+
   const fetchdata = async (searchString)=>{
     const response = await Axios.get(`http://www.omdbapi.com/?s=${searchString}&apikey=${API_KEY}`
     );
@@ -94,16 +105,95 @@ function App() {
 
 
   return (
-    
+      
       <Container>
+      
         <Header>
           <AppName>
+           <Particles
+      id="tsparticles"
+      init={particlesInit}
+      loaded={particlesLoaded}
+      options={{
+        background: {
+          color: {
+            value: "",
+          },
+        },
+        fpsLimit: 40,
+        interactivity: {
+          events: {
+            onClick: {
+              enable: true,
+              mode: "push",
+            },
+            onHover: {
+              enable: true,
+              mode: "repulse",
+            },
+            resize: true,
+          },
+          modes: {
+            push: {
+              quantity: 4,
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4,
+            },
+          },
+        },
+        particles: {
+          color: {
+            value: "#FF0000",
+          },
+          links: {
+            color: "#A020F0",
+            distance: 150,
+            enable: true,
+            opacity: 0.1,
+            width: 1,
+          },
+          collisions: {
+            enable: false,
+          },
+          move: {
+            direction: "bottom",
+            enable: true,
+            outModes: {
+              default: "bounce",
+            },
+            random: false,
+            speed: 2,
+            straight: false,
+          },
+          number: {
+            density: {
+              enable: true,
+              area: 900,
+            },
+            value: 80,
+          },
+          opacity: {
+            value: 0.9,
+          },
+          shape: {
+            type: "circle",
+          },
+          size: {
+            value: { min: 1, max: 2 },
+          },
+        },
+        detectRetina: true,
+      }}
+    />
             React Movie App
             </AppName>
             <SearchBox>
                 <SearchInput placeholder="Movie Name" value={searchQuery} onChange={ontextChange}/>
             </SearchBox>
         </Header>
+
         {selectedMovie && <MovieInfoComponent selectedMovie={selectedMovie}/>}
           <MovieListContainer>
           {movieList?.length ? (
@@ -117,6 +207,7 @@ function App() {
         ) : <Centermsg>RESULT SHOWN HERE</Centermsg>}
           </MovieListContainer>
         </Container>
+        
   );
 }
 
