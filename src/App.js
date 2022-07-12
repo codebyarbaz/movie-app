@@ -72,13 +72,20 @@ const Centermsg= styled.div`
 `;
 
 
-
 function App() {
-  
-  const [searchQuery,updateSearchQuery] = useState();
-  const [timeoutID, updatetimeoutID] = useState();
-  const [movieList,updateMovielist] = useState([]);
+  const [searchQuery, updateSearchQuery] = useState("");
+
+  const [movieList, updateMovieList] = useState([]);
   const [selectedMovie, onMovieSelect] = useState();
+
+  const [timeoutId, updateTimeoutId] = useState();
+
+  const fetchData = async (searchString) => {
+    const response = await Axios.get(
+      `https://www.omdbapi.com/?s=${searchString}&apikey=${API_KEY}`,
+    );
+    updateMovieList(response.data.Search);
+  };
 
   const particlesInit = async (main) => {
     console.log(main);
@@ -89,19 +96,13 @@ function App() {
     console.log(container);
   };
 
-  const fetchdata = async (searchString)=>{
-    const response = await Axios.get(`http://www.omdbapi.com/?s=${searchString}&apikey=${API_KEY}`
-    );
-    updateMovielist(response.data.Search);
-  }
-
-  const ontextChange = (event)=>{
-        clearTimeout(timeoutID);
-        updateSearchQuery(event.target.value);
-        const timeout = setTimeout(()=> fetchdata(event.target.value),500);
-        updatetimeoutID(timeout);
-  }
-
+   const onTextChange = (e) => {
+    onMovieSelect("")
+    clearTimeout(timeoutId);
+    updateSearchQuery(e.target.value);
+    const timeout = setTimeout(() => fetchData(e.target.value), 500);
+    updateTimeoutId(timeout);
+  };
 
 
   return (
@@ -190,7 +191,7 @@ function App() {
             React Movie App
             </AppName>
             <SearchBox>
-                <SearchInput placeholder="Movie Name" value={searchQuery} onChange={ontextChange}/>
+                <SearchInput placeholder="Movie Name" value={searchQuery} onChange={onTextChange}/>
             </SearchBox>
         </Header>
 

@@ -1,9 +1,11 @@
 {
   "name": "movie-app",
+  "homepage": "https://kshivam7.github.io/movie-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "axios": "^0.26.1",
+    "gh-pages": "^4.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.1",
@@ -12,6 +14,8 @@
     "tsparticles": "^2.1.0"
   },
   "scripts": {
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
